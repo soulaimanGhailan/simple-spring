@@ -14,7 +14,7 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor @Builder
-public class Case {
+public class CaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id ;

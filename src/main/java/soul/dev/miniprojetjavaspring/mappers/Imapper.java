@@ -1,9 +1,10 @@
 package soul.dev.miniprojetjavaspring.mappers;
 
-import soul.dev.miniprojetjavaspring.dtos.CaseDto;
-import soul.dev.miniprojetjavaspring.entities.Case;
+import soul.dev.miniprojetjavaspring.dtos.CaseReqDto;
+import soul.dev.miniprojetjavaspring.dtos.CaseResDto;
+import soul.dev.miniprojetjavaspring.entities.CaseEntity;
 
 public interface Imapper {
-    CaseDto fromCase(Case aCase) ;
-    Case fromCaseDto(CaseDto aCaseDto) ;
+    CaseResDto fromCaseToCaseResponse(CaseEntity aCaseEntity) ;
+    CaseEntity fromCaseRequestDto(CaseReqDto caseReqDto) ;
 }

@@ -3,7 +3,8 @@ package soul.dev.miniprojetjavaspring.web;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import soul.dev.miniprojetjavaspring.dtos.CaseDto;
+import soul.dev.miniprojetjavaspring.dtos.CaseReqDto;
+import soul.dev.miniprojetjavaspring.dtos.CaseResDto;
 import soul.dev.miniprojetjavaspring.exception.CaseNotFoundException;
 import soul.dev.miniprojetjavaspring.service.CaseService;
 
@@ -19,10 +20,10 @@ public class CaseRestController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<CaseDto> getCase(@PathVariable int id) {
+    public ResponseEntity<CaseResDto> getCase(@PathVariable int id) {
         try {
-            CaseDto caseDto = caseService.getCase(id);
-            return ResponseEntity.ok(caseDto) ;
+            CaseResDto caseResDto = caseService.getCase(id);
+            return ResponseEntity.ok(caseResDto) ;
         } catch (CaseNotFoundException e) {
             log.error("Case with id {} not found", id);
             return ResponseEntity.internalServerError().build();
@@ -30,27 +31,27 @@ public class CaseRestController {
     }
 
     @PostMapping
-    public ResponseEntity<CaseDto> getCase(@RequestBody CaseDto caseDto) {
-        CaseDto caseDto1 = caseService.addCase(caseDto);
-        return ResponseEntity.ok(caseDto) ;
+    public ResponseEntity<CaseResDto> getCase(@RequestBody CaseReqDto caseReqDto) {
+        CaseResDto caseResDto1 = caseService.addCase(caseReqDto);
+        return ResponseEntity.ok(caseResDto1) ;
     }
-    /** id est passe via caseDto **/
-    @PutMapping
-    public ResponseEntity<CaseDto> updateCase(@RequestBody CaseDto caseDto) {
+
+    @PutMapping("{id}")
+    public ResponseEntity<CaseResDto> updateCase(@RequestBody CaseReqDto caseReqDto , @PathVariable int id) {
         try {
-            CaseDto caseDto1 = caseService.updateCase(caseDto);
-            return ResponseEntity.ok(caseDto1) ;
+            CaseResDto caseResDto1 = caseService.updateCase(caseReqDto , id);
+            return ResponseEntity.ok(caseResDto1) ;
         } catch (CaseNotFoundException e) {
-            log.error("Case with id {} not found", caseDto.getId());
+            log.error("Case with id {} not found", id);
             return ResponseEntity.internalServerError().build();
         }
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<CaseDto> updateCase(@PathVariable long id) {
+    public ResponseEntity<CaseResDto> updateCase(@PathVariable long id) {
         try {
-            CaseDto caseDto1 = caseService.deleteCase(id);
-            return ResponseEntity.ok(caseDto1) ;
+            CaseResDto caseResDto1 = caseService.deleteCase(id);
+            return ResponseEntity.ok(caseResDto1) ;
         } catch (CaseNotFoundException e) {
             log.error("Case with id {} not found", id);
             return ResponseEntity.internalServerError().build();

@@ -3,14 +3,11 @@ package soul.dev.miniprojetjavaspring.dtos;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import java.util.Date;
 
 @Data
-@AllArgsConstructor @NoArgsConstructor
-public class CaseDto {
-    private long id ;
+@AllArgsConstructor
+@NoArgsConstructor
+public class CaseReqDto {
     private String title ;
-    private Date creationDate;
-    private Date lastUpdateDate;
     private String description ;
 }

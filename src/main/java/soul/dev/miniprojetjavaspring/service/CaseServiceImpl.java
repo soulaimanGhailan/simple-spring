@@ -3,8 +3,9 @@ package soul.dev.miniprojetjavaspring.service;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import soul.dev.miniprojetjavaspring.dtos.CaseDto;
-import soul.dev.miniprojetjavaspring.entities.Case;
+import soul.dev.miniprojetjavaspring.dtos.CaseReqDto;
+import soul.dev.miniprojetjavaspring.dtos.CaseResDto;
+import soul.dev.miniprojetjavaspring.entities.CaseEntity;
 import soul.dev.miniprojetjavaspring.exception.CaseNotFoundException;
 import soul.dev.miniprojetjavaspring.mappers.Imapper;
 import soul.dev.miniprojetjavaspring.repository.CaseRepo;
@@ -24,34 +25,35 @@ public class CaseServiceImpl implements CaseService {
     }
 
     @Override
-    public CaseDto updateCase(CaseDto caseDto) throws CaseNotFoundException {
-        Case aCase = caseRepo.findById(caseDto.getId()).orElseThrow(() -> new CaseNotFoundException("Case of id " + caseDto.getId() + " not found"));
-        BeanUtils.copyProperties(caseDto , aCase);
-        aCase.setLastUpdateDate(new Date());
-        Case updatedCase = caseRepo.save(aCase);
-        return imapper.fromCase(updatedCase);
+    public CaseResDto updateCase(CaseReqDto caseReqDto , long id) throws CaseNotFoundException {
+        CaseEntity caseEntity = caseRepo.findById(id).orElseThrow(() -> new CaseNotFoundException("Case of id " + id + " not found"));
+        caseEntity.setTitle(caseReqDto.getTitle());
+        caseEntity.setDescription(caseReqDto.getDescription()); ;
+        caseEntity.setLastUpdateDate(new Date());
+        CaseEntity updatedCaseEntity = caseRepo.save(caseEntity);
+        return imapper.fromCaseToCaseResponse(updatedCaseEntity);
     }
 
     @Override
-    public CaseDto addCase(CaseDto caseDto) {
-        Case aCase = imapper.fromCaseDto(caseDto) ;
+    public CaseResDto addCase(CaseReqDto caseReqDto) {
+        CaseEntity caseEntity = imapper.fromCaseRequestDto(caseReqDto) ;
         Date date = new Date();
-        aCase.setCreationDate(date);
-        aCase.setLastUpdateDate(date);
-        Case savedCase = caseRepo.save(aCase);
-        return imapper.fromCase(savedCase);
+        caseEntity.setCreationDate(date);
+        caseEntity.setLastUpdateDate(date);
+        CaseEntity savedCaseEntity = caseRepo.save(caseEntity);
+        return imapper.fromCaseToCaseResponse(savedCaseEntity);
     }
 
     @Override
-    public CaseDto getCase(long id) throws CaseNotFoundException {
-        Case aCase = caseRepo.findById(id).orElseThrow(() -> new CaseNotFoundException("Case of id " + id + " not found"));
-        return imapper.fromCase(aCase);
+    public CaseResDto getCase(long id) throws CaseNotFoundException {
+        CaseEntity aCaseEntity = caseRepo.findById(id).orElseThrow(() -> new CaseNotFoundException("Case of id " + id + " not found"));
+        return imapper.fromCaseToCaseResponse(aCaseEntity);
     }
 
     @Override
-    public CaseDto deleteCase(long id) throws CaseNotFoundException {
-        Case aCase = caseRepo.findById(id).orElseThrow(() -> new CaseNotFoundException("Case of id " + id + " not found"));
+    public CaseResDto deleteCase(long id) throws CaseNotFoundException {
+        CaseEntity aCaseEntity = caseRepo.findById(id).orElseThrow(() -> new CaseNotFoundException("Case of id " + id + " not found"));
         caseRepo.deleteById(id);
-        return imapper.fromCase(aCase);
+        return imapper.fromCaseToCaseResponse(aCaseEntity);
     }
 }
