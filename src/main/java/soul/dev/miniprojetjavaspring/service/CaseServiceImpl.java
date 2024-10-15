@@ -9,6 +9,8 @@ import soul.dev.miniprojetjavaspring.exception.CaseNotFoundException;
 import soul.dev.miniprojetjavaspring.mappers.Imapper;
 import soul.dev.miniprojetjavaspring.repository.CaseRepo;
 
+import java.util.Date;
+
 @Service
 @Transactional
 public class CaseServiceImpl implements CaseService {
@@ -25,6 +27,7 @@ public class CaseServiceImpl implements CaseService {
     public CaseDto updateCase(CaseDto caseDto) throws CaseNotFoundException {
         Case aCase = caseRepo.findById(caseDto.getId()).orElseThrow(() -> new CaseNotFoundException("Case of id " + caseDto.getId() + " not found"));
         BeanUtils.copyProperties(caseDto , aCase);
+        aCase.setLastUpdateDate(new Date());
         Case updatedCase = caseRepo.save(aCase);
         return imapper.fromCase(updatedCase);
     }
@@ -32,6 +35,9 @@ public class CaseServiceImpl implements CaseService {
     @Override
     public CaseDto addCase(CaseDto caseDto) {
         Case aCase = imapper.fromCaseDto(caseDto) ;
+        Date date = new Date();
+        aCase.setCreationDate(date);
+        aCase.setLastUpdateDate(date);
         Case savedCase = caseRepo.save(aCase);
         return imapper.fromCase(savedCase);
     }
